@@ -1,6 +1,6 @@
-# ArduinoDIYServer
+# ArduinoESPServer
 
-Arduino IDE library for ESP8266 and ESP32 projects that communicate with a DIY JSON server.
+Arduino IDE library for ESP8266 and ESP32 projects that communicate with a ESP JSON server.
 
 ## Features
 
@@ -21,14 +21,14 @@ Arduino IDE library for ESP8266 and ESP32 projects that communicate with a DIY J
 
 ## Install in Arduino IDE
 
-Copy the folder `ArduinoDIYServer` into your Arduino libraries folder.
+Copy the folder `ArduinoESPServer` into your Arduino libraries folder.
 
 Then restart Arduino IDE.
 
 ## Basic standard
 
 ```cpp
-#include <ArduinoDIYServer.h>
+#include <ArduinoESPServer.h>
 
 const char* WIFI_SSID = "YOUR_WIFI_SSID";
 const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
@@ -37,7 +37,7 @@ const char* PROJECT_TOKEN = "YOUR_48_CHARACTER_PROJECT_TOKEN";
 StaticJsonDocument<256> doc;
 String json = "";
 
-DIYServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN);
+ESPServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN);
 
 void pollVpinFromServer(String Vpin) {
   if (server.pollVpin(Vpin, json)) {
@@ -67,5 +67,8 @@ updateVpinFromServer("V2");
 
 - `00_ProjectTemplate`
 - `01_Outlet`
-- `02_Light`
-- `03_Fan`
+- `02_Switch`
+- `03_Valve`
+- `04_Irrigation`
+- `05_Leak_Sensor`
+- `06_Light_RGB`

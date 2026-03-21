@@ -1,26 +1,18 @@
-#include <ArduinoDIYServer.h>
+#include <ArduinoESPServer.h>
 
 /*
   ============================================================
-  Example 00 - Project Template
+  Example 02 - Light
   ============================================================
-  This template is the recommended starting point for new projects.
-  It already contains:
-    - Wi-Fi connection
-    - Optional OTA hook
-    - VPin polling
-    - VPin update
+  JSON format used by this example:
+  {"Name":"switch","Configured Name":"switch","On":"1"}
 
-  The JSON string received from the server is stored in the global
-  variable named 'json'.
-
-  The parsed JSON object is stored in the global variable named 'doc'.
-
-  A device can use one VPin or many VPins.
-  To use many VPins, call pollVpinFromServer("V1");
-	updateVpinOnServer("V1");
-  pollVpinFromServer("V2");
-  updateVpinOnServer("V2");
+  What this example does:
+    - Polls one VPin from the server
+    - Reads the global JSON document
+    - Uses the field "On" to control one relay
+    - Prints the light values to Serial
+    - Sends the same JSON structure back to the server
 */
 
 // ------------------------------------------------------------
@@ -40,31 +32,29 @@ const unsigned long POLL_INTERVAL_MS = 1000UL;
 // Optional OTA configuration block
 // ------------------------------------------------------------
 const bool ENABLE_OTA = true;
-const char* OTA_HOSTNAME = "template-device";
+const char* OTA_HOSTNAME = "switch-device";
 const char* OTA_PASSWORD = "YOUR_OTA_PASSWORD";
 
 // ------------------------------------------------------------
 // Client object block
 // ------------------------------------------------------------
-DIYServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN);
+ESPServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN);
 
 // ------------------------------------------------------------
 // Runtime state block
 // ------------------------------------------------------------
 unsigned long lastPollMs = 0;
-const char* VPIN_V1 = "V1";
-StaticJsonDocument<256> doc;
+const uint8_t RELAY_PIN = D1;
+const char* VPIN_SWITCH = "V2";
+StaticJsonDocument<512> doc;
 String json = "";
 
 // ------------------------------------------------------------
 // Update block
 // ------------------------------------------------------------
-void updateVpinOnServer(String Vpin) {
-  // Convert the global JSON document to a JSON string.
+void updateVpinFromServer(String Vpin) {
   json = "";
   serializeJson(doc, json);
-
-  // Send the JSON string to the selected VPin on the server.
   server.updateVpin(Vpin, json);
 }
 
@@ -72,10 +62,8 @@ void updateVpinOnServer(String Vpin) {
 // Poll block
 // ------------------------------------------------------------
 void pollVpinFromServer(String Vpin) {
-  // Read the JSON string from the selected VPin on the server.
-	json = "";
+  json = "";
   if (server.pollVpin(Vpin, json)) {
-    // Parse the received JSON string into the global JSON document.
 		doc.clear();
     deserializeJson(doc, json);
   }
@@ -87,6 +75,9 @@ void pollVpinFromServer(String Vpin) {
 void setup() {
   Serial.begin(115200);
   delay(200);
+
+  pinMode(RELAY_PIN, OUTPUT);
+  digitalWrite(RELAY_PIN, HIGH);
 
   server.begin();
 
@@ -104,13 +95,16 @@ void loop() {
   if (millis() - lastPollMs >= POLL_INTERVAL_MS) {
     lastPollMs = millis();
 
-    pollVpinFromServer(VPIN_V1);
+    pollVpinFromServer(VPIN_SWITCH);
 
-    // Handle the data stored in the global JSON document here.
-    // Example:
-    // doc["Name"] = "Name";
-    // doc["On"] = "0";
-
-    updateVpinOnServer(VPIN_V1);
+		// Read the "On" value from the global JSON document.
+    // This example uses an active-low relay.
+    if (doc["On"] == "0") {
+      digitalWrite(RELAY_PIN, HIGH);
+    }else{
+      digitalWrite(RELAY_PIN, LOW);
+    }
+    
+    updateVpinFromServer(VPIN_SWITCH);
   }
 }

@@ -1,6 +1,6 @@
-#include "ArduinoDIYServer.h"
+#include "ArduinoESPServer.h"
 
-DIYServerClient::DIYServerClient(const char* wifiSsid,
+ESPServerClient::ESPServerClient(const char* wifiSsid,
                                  const char* wifiPassword,
                                  const char* serverBaseUrl,
                                  const char* projectToken)
@@ -15,11 +15,11 @@ DIYServerClient::DIYServerClient(const char* wifiSsid,
     _lastHttpCode(0) {
 }
 
-void DIYServerClient::begin() {
+void ESPServerClient::begin() {
   connectWiFi();
 }
 
-void DIYServerClient::loop() {
+void ESPServerClient::loop() {
   maintainWiFi();
 
   if (_otaEnabled && WiFi.status() == WL_CONNECTED) {
@@ -27,7 +27,7 @@ void DIYServerClient::loop() {
   }
 }
 
-void DIYServerClient::enableOTA(const char* hostname, const char* password) {
+void ESPServerClient::enableOTA(const char* hostname, const char* password) {
   ArduinoOTA.setHostname(hostname);
 
   if (password && strlen(password) > 0) {
@@ -54,7 +54,7 @@ void DIYServerClient::enableOTA(const char* hostname, const char* password) {
   _otaEnabled = true;
 }
 
-bool DIYServerClient::pollVpin(const String& vpin, String& json) {
+bool ESPServerClient::pollVpin(const String& vpin, String& json) {
   if (WiFi.status() != WL_CONNECTED) {
     setError("Wi-Fi not connected", 0);
     return false;
@@ -92,11 +92,11 @@ bool DIYServerClient::pollVpin(const String& vpin, String& json) {
   return true;
 }
 
-bool DIYServerClient::pollVpin(uint16_t vpin, String& json) {
+bool ESPServerClient::pollVpin(uint16_t vpin, String& json) {
   return pollVpin(String(vpin), json);
 }
 
-bool DIYServerClient::updateVpin(const String& vpin, const String& json) {
+bool ESPServerClient::updateVpin(const String& vpin, const String& json) {
   if (WiFi.status() != WL_CONNECTED) {
     setError("Wi-Fi not connected", 0);
     return false;
@@ -135,23 +135,23 @@ bool DIYServerClient::updateVpin(const String& vpin, const String& json) {
   return true;
 }
 
-bool DIYServerClient::updateVpin(uint16_t vpin, const String& json) {
+bool ESPServerClient::updateVpin(uint16_t vpin, const String& json) {
   return updateVpin(String(vpin), json);
 }
 
-bool DIYServerClient::isConnected() const {
+bool ESPServerClient::isConnected() const {
   return WiFi.status() == WL_CONNECTED;
 }
 
-String DIYServerClient::getLastError() const {
+String ESPServerClient::getLastError() const {
   return _lastError;
 }
 
-int DIYServerClient::getLastHttpCode() const {
+int ESPServerClient::getLastHttpCode() const {
   return _lastHttpCode;
 }
 
-void DIYServerClient::connectWiFi() {
+void ESPServerClient::connectWiFi() {
   WiFi.mode(WIFI_STA);
   WiFi.persistent(false);
   WiFi.setAutoReconnect(true);
@@ -170,7 +170,7 @@ void DIYServerClient::connectWiFi() {
   Serial.println(WiFi.localIP());
 }
 
-void DIYServerClient::maintainWiFi() {
+void ESPServerClient::maintainWiFi() {
   if (!_wifiStarted) {
     connectWiFi();
     return;
@@ -191,7 +191,7 @@ void DIYServerClient::maintainWiFi() {
   WiFi.begin(_wifiSsid, _wifiPassword);
 }
 
-String DIYServerClient::buildUrl(const String& vpin, const char* action) const {
+String ESPServerClient::buildUrl(const String& vpin, const char* action) const {
   String url = String(_serverBaseUrl);
   while (url.endsWith("/")) {
     url.remove(url.length() - 1);
@@ -206,7 +206,7 @@ String DIYServerClient::buildUrl(const String& vpin, const char* action) const {
   return url;
 }
 
-String DIYServerClient::normalizeVpin(const String& vpin) const {
+String ESPServerClient::normalizeVpin(const String& vpin) const {
   String normalized = vpin;
   normalized.trim();
 
@@ -222,7 +222,7 @@ String DIYServerClient::normalizeVpin(const String& vpin) const {
   return "V" + normalized;
 }
 
-String DIYServerClient::urlEncode(const String& input) const {
+String ESPServerClient::urlEncode(const String& input) const {
   String encoded;
   encoded.reserve(input.length() * 3);
 
@@ -244,7 +244,7 @@ String DIYServerClient::urlEncode(const String& input) const {
   return encoded;
 }
 
-void DIYServerClient::setError(const String& error, int httpCode) {
+void ESPServerClient::setError(const String& error, int httpCode) {
   _lastError = error;
   _lastHttpCode = httpCode;
 }

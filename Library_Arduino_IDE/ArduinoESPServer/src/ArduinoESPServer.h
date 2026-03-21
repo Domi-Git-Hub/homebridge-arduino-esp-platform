@@ -1,5 +1,5 @@
-#ifndef ARDUINO_DIY_SERVER_H
-#define ARDUINO_DIY_SERVER_H
+#ifndef ARDUINO_ESP_SERVER_H
+#define ARDUINO_ESP_SERVER_H
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
@@ -13,12 +13,12 @@
   #include <HTTPClient.h>
   #include <ArduinoOTA.h>
 #else
-  #error "ArduinoDIYServer supports ESP8266 and ESP32 only."
+  #error "ArduinoESPServer supports ESP8266 and ESP32 only."
 #endif
 
-class DIYServerClient {
+class ESPServerClient {
 public:
-  DIYServerClient(const char* wifiSsid,
+  ESPServerClient(const char* wifiSsid,
                   const char* wifiPassword,
                   const char* serverBaseUrl,
                   const char* projectToken);

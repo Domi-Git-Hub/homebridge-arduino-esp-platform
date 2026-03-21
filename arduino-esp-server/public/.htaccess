@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Pretty API routes: /TOKEN/get/V0 and /TOKEN/update/V0
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([A-Fa-f0-9]{48})/(get|update)/(V[0-9]+)$ api.php?token=$1&action=$2&vpin=$3 [QSA,L]

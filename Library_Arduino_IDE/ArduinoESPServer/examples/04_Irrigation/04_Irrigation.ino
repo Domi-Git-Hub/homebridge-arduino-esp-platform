@@ -1,4 +1,4 @@
-#include <ArduinoDIYServer.h>
+#include <ArduinoESPServer.h>
 
 /*
   ============================================================
@@ -39,7 +39,7 @@ const char* OTA_PASSWORD = "YOUR_OTA_PASSWORD";
 // ------------------------------------------------------------
 // Client object block
 // ------------------------------------------------------------
-DIYServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN);
+ESPServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN);
 
 // ------------------------------------------------------------
 // Runtime state block

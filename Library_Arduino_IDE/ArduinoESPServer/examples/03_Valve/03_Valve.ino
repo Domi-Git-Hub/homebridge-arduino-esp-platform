@@ -1,18 +1,19 @@
-#include <ArduinoDIYServer.h>
+#include <ArduinoESPServer.h>
 
 /*
   ============================================================
-  Example 02 - Light
+  Example 03 - Fan
   ============================================================
   JSON format used by this example:
-  {"Name":"switch","Configured Name":"switch","On":"1"}
+  {"Name":"valve","Active":"0","Configured Name":"valve","In Use":"0","Is Configured":"1","Remaining Duration":"0","Service Label Index":"1","Set Duration":"300","Status Fault":"0","Valve Type":"0"}
 
   What this example does:
     - Polls one VPin from the server
     - Reads the global JSON document
-    - Uses the field "On" to control one relay
-    - Prints the light values to Serial
-    - Sends the same JSON structure back to the server
+    - Uses the field "Active" to control one output
+    - Prints the fan values to Serial
+    - Updates the field "Current Fan State"
+    - Sends the modified JSON back to the server
 */
 
 // ------------------------------------------------------------
@@ -32,21 +33,21 @@ const unsigned long POLL_INTERVAL_MS = 1000UL;
 // Optional OTA configuration block
 // ------------------------------------------------------------
 const bool ENABLE_OTA = true;
-const char* OTA_HOSTNAME = "switch-device";
+const char* OTA_HOSTNAME = "valve-device";
 const char* OTA_PASSWORD = "YOUR_OTA_PASSWORD";
 
 // ------------------------------------------------------------
 // Client object block
 // ------------------------------------------------------------
-DIYServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN);
+ESPServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN);
 
 // ------------------------------------------------------------
 // Runtime state block
 // ------------------------------------------------------------
 unsigned long lastPollMs = 0;
 const uint8_t RELAY_PIN = D1;
-const char* VPIN_SWITCH = "V2";
-StaticJsonDocument<512> doc;
+const char* VPIN = "V7";
+StaticJsonDocument<384> doc;
 String json = "";
 
 // ------------------------------------------------------------
@@ -95,16 +96,26 @@ void loop() {
   if (millis() - lastPollMs >= POLL_INTERVAL_MS) {
     lastPollMs = millis();
 
-    pollVpinFromServer(VPIN_SWITCH);
+    pollVpinFromServer(VPIN);
 
-		// Read the "On" value from the global JSON document.
-    // This example uses an active-low relay.
-    if (doc["On"] == "0") {
-      digitalWrite(RELAY_PIN, HIGH);
-    }else{
+    if (doc["Active"] == "1" && doc["Is Configured"] == "1" && doc["In Use"] == "0") {
       digitalWrite(RELAY_PIN, LOW);
+      doc["In Use"] = "1";
+      doc["Remaining Duration"] = doc["Set Duration"];
+    }else if (doc["Active"] == "1" && doc["Is Configured"] == "1" && doc["In Use"] == "1") {
+      int remaining = doc["Remaining Duration"].as<int>() - 1;
+      doc["Remaining Duration"] = String(remaining);
+      if (doc["Remaining Duration"] == "0") {
+        digitalWrite(RELAY_PIN, HIGH);
+        doc["Active"] = "0";
+        doc["In Use"] = "0";
+      }
+    }else {
+      digitalWrite(RELAY_PIN, HIGH);
+      doc["Remaining Duration"] = "0";
+      doc["In Use"] = "0";
     }
-    
-    updateVpinFromServer(VPIN_SWITCH);
+
+    updateVpinFromServer(VPIN);
   }
 }

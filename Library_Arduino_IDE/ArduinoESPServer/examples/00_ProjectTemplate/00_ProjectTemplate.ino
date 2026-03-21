@@ -1,18 +1,26 @@
-#include <ArduinoDIYServer.h>
+#include <ArduinoESPServer.h>
 
 /*
   ============================================================
-  Example 01 - Outlet
+  Example 00 - Project Template
   ============================================================
-  JSON format used by this example:
-  {"Name":"Water Leak","Leak Detected":"0","Status Active":"0","Status Fault":"0","Status Low Battery":"0","Status Tampered":"0"}
+  This template is the recommended starting point for new projects.
+  It already contains:
+    - Wi-Fi connection
+    - Optional OTA hook
+    - VPin polling
+    - VPin update
 
-  What this example does:
-    - Polls one VPin from the server
-    - Reads the global JSON document
-    - Uses the field "On" to control one relay
-    - Updates the field "Outlet In Use"
-    - Sends the modified JSON back to the server
+  The JSON string received from the server is stored in the global
+  variable named 'json'.
+
+  The parsed JSON object is stored in the global variable named 'doc'.
+
+  A device can use one VPin or many VPins.
+  To use many VPins, call pollVpinFromServer("V1");
+	updateVpinOnServer("V1");
+  pollVpinFromServer("V2");
+  updateVpinOnServer("V2");
 */
 
 // ------------------------------------------------------------
@@ -32,22 +40,19 @@ const unsigned long POLL_INTERVAL_MS = 1000UL;
 // Optional OTA configuration block
 // ------------------------------------------------------------
 const bool ENABLE_OTA = true;
-const char* OTA_HOSTNAME = "leak_sensor-device";
+const char* OTA_HOSTNAME = "template-device";
 const char* OTA_PASSWORD = "YOUR_OTA_PASSWORD";
 
 // ------------------------------------------------------------
 // Client object block
 // ------------------------------------------------------------
-DIYServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN);
+ESPServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN);
 
 // ------------------------------------------------------------
 // Runtime state block
 // ------------------------------------------------------------
 unsigned long lastPollMs = 0;
-const uint8_t PROBE_POWER_PIN = D1;
-const uint8_t PROBE_SENSE_PIN = D2;
-const char* VPIN_LEAK_SENSOR = "V10";
-bool waterDetected = false;
+const char* VPIN_V1 = "V1";
 StaticJsonDocument<256> doc;
 String json = "";
 
@@ -55,8 +60,11 @@ String json = "";
 // Update block
 // ------------------------------------------------------------
 void updateVpinOnServer(String Vpin) {
+  // Convert the global JSON document to a JSON string.
   json = "";
   serializeJson(doc, json);
+
+  // Send the JSON string to the selected VPin on the server.
   server.updateVpin(Vpin, json);
 }
 
@@ -64,8 +72,10 @@ void updateVpinOnServer(String Vpin) {
 // Poll block
 // ------------------------------------------------------------
 void pollVpinFromServer(String Vpin) {
+  // Read the JSON string from the selected VPin on the server.
 	json = "";
   if (server.pollVpin(Vpin, json)) {
+    // Parse the received JSON string into the global JSON document.
 		doc.clear();
     deserializeJson(doc, json);
   }
@@ -77,12 +87,6 @@ void pollVpinFromServer(String Vpin) {
 void setup() {
   Serial.begin(115200);
   delay(200);
-
-  pinMode(PROBE_POWER_PIN, OUTPUT);
-  digitalWrite(PROBE_POWER_PIN, LOW);
-
-  // External 1M pulldown resistor required on PROBE_SENSE_PIN
-  pinMode(PROBE_SENSE_PIN, INPUT);
 
   server.begin();
 
@@ -100,39 +104,13 @@ void loop() {
   if (millis() - lastPollMs >= POLL_INTERVAL_MS) {
     lastPollMs = millis();
 
-    pollVpinFromServer(VPIN_LEAK_SENSOR);
+    pollVpinFromServer(VPIN_V1);
 
-    waterDetected = readWaterSensor();
+    // Handle the data stored in the global JSON document here.
+    // Example:
+    // doc["Name"] = "Name";
+    // doc["On"] = "0";
 
-    if (waterDetected && doc["Leak Detected"] == "0" && doc["Status Active"] == "0") {
-      doc["Leak Detected"] = "1";
-      doc["Status Active"] = "1";
-      updateVpinOnServer(VPIN_LEAK_SENSOR);
-    } else if (!waterDetected && doc["Leak Detected"] == "1" && doc["Status Active"] == "1") {
-      doc["Leak Detected"] = "0";
-      doc["Status Active"] = "0";
-      updateVpinOnServer(VPIN_LEAK_SENSOR);
-    }
+    updateVpinOnServer(VPIN_V1);
   }
-}
-
-bool readWaterSensor() {
-  int hits = 0;
-  const int samples = 10;
-
-  for (int i = 0; i < samples; i++) {
-    // Power the probe only for a short time
-    digitalWrite(PROBE_POWER_PIN, HIGH);
-    delay(3);
-
-    if (digitalRead(PROBE_SENSE_PIN) == HIGH) {
-      hits++;
-    }
-
-    digitalWrite(PROBE_POWER_PIN, LOW);
-    delay(20);
-  }
-
-  // Require several positive reads to avoid false triggers
-  return (hits >= 3);
 }
