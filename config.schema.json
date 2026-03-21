@@ -1,0 +1,957 @@
+{
+  "pluginAlias": "Arduino_ESP_Platform",
+  "pluginType": "platform",
+  "singular": true,
+  "strictValidation": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Platform Name",
+        "type": "string",
+        "default": "Arduino ESP Platform"
+      },
+      "serverurl": {
+        "title": "Server URL",
+        "type": "string",
+        "placeholder": "http://192.168.2.47:8181",
+        "default": "http://192.168.2.47:8181"
+      },
+      "pollerseconds": {
+        "title": "Poller Seconds",
+        "type": "integer",
+        "description": "in seconds",
+        "default": 10,
+        "minimum": 1
+      },
+      "devices": {
+        "title": "Devices",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Device Name",
+              "type": "string"
+            },
+            "token": {
+              "title": "Token",
+              "type": "string"
+            },
+            "deviceId": {
+              "title": "Device ID",
+              "type": "integer"
+            },
+            "manufacturer": {
+              "title": "Manufacturer",
+              "type": "string"
+            },
+            "accessories": {
+              "title": "Accessories",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "title": "Model",
+                    "type": "string"
+                  },
+                  "name": {
+                    "title": "Accessory Name",
+                    "type": "string"
+                  },
+                  "pinnumber": {
+                    "title": "Pin Number",
+                    "type": "integer"
+                  },
+                  "typeOf": {
+                    "title": "Type",
+                    "type": "string",
+                    "default": "OUTLET",
+                    "oneOf": [
+                      {
+                        "title": "Air Purifier",
+                        "enum": [
+                          "AIR_PURIFIER"
+                        ]
+                      },
+                      {
+                        "title": "Air Quality Sensor",
+                        "enum": [
+                          "AIR_QUALITY_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Battery",
+                        "enum": [
+                          "BATTERY"
+                        ]
+                      },
+                      {
+                        "title": "Carbon Dioxide Sensor",
+                        "enum": [
+                          "CARBON_DIOXIDE_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Carbon Monoxide Sensor",
+                        "enum": [
+                          "CARBON_MONOXIDE_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Contact Sensor",
+                        "enum": [
+                          "CONTACT_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Door",
+                        "enum": [
+                          "DOOR"
+                        ]
+                      },
+                      {
+                        "title": "Fanv2",
+                        "enum": [
+                          "FANV2"
+                        ]
+                      },
+                      {
+                        "title": "Faucet",
+                        "enum": [
+                          "FAUCET"
+                        ]
+                      },
+                      {
+                        "title": "Filter Maintenance",
+                        "enum": [
+                          "FILTER_MAINTENANCE"
+                        ]
+                      },
+                      {
+                        "title": "Garage Door Opener",
+                        "enum": [
+                          "GARAGE_DOOR_OPENER"
+                        ]
+                      },
+                      {
+                        "title": "Heater/Cooler",
+                        "enum": [
+                          "HEATER_COOLER"
+                        ]
+                      },
+                      {
+                        "title": "Humidifier/Dehumidifier",
+                        "enum": [
+                          "HUMIDIFIER_DEHUMIDIFIER"
+                        ]
+                      },
+                      {
+                        "title": "Humidity Sensor",
+                        "enum": [
+                          "HUMIDITY_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Irrigation System",
+                        "enum": [
+                          "IRRIGATION_SYSTEM"
+                        ]
+                      },
+                      {
+                        "title": "Leak Sensor",
+                        "enum": [
+                          "LEAK_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Lightbulb",
+                        "enum": [
+                          "LIGHTBULB"
+                        ]
+                      },
+                      {
+                        "title": "Light Sensor",
+                        "enum": [
+                          "LIGHT_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Lock Mechanism",
+                        "enum": [
+                          "LOCK_MECHANISM"
+                        ]
+                      },
+                      {
+                        "title": "Motion Sensor",
+                        "enum": [
+                          "MOTION_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Occupancy Sensor",
+                        "enum": [
+                          "OCCUPANCY_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Outlet",
+                        "enum": [
+                          "OUTLET"
+                        ]
+                      },
+                      {
+                        "title": "Security System",
+                        "enum": [
+                          "SECURITY_SYSTEM"
+                        ]
+                      },
+                      {
+                        "title": "Smoke Sensor",
+                        "enum": [
+                          "SMOKE_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Switch",
+                        "enum": [
+                          "SWITCH"
+                        ]
+                      },
+                      {
+                        "title": "Temperature Sensor",
+                        "enum": [
+                          "TEMPERATURE_SENSOR"
+                        ]
+                      },
+                      {
+                        "title": "Thermostat",
+                        "enum": [
+                          "THERMOSTAT"
+                        ]
+                      },
+                      {
+                        "title": "Valve",
+                        "enum": [
+                          "VALVE"
+                        ]
+                      },
+                      {
+                        "title": "Window",
+                        "enum": [
+                          "WINDOW"
+                        ]
+                      },
+                      {
+                        "title": "Window Covering",
+                        "enum": [
+                          "WINDOW_COVERING"
+                        ]
+                      }
+                    ]
+                  },
+                  "characteristics": {
+                    "title": "Optional Characteristics",
+                    "type": "object",
+                    "properties": {
+                      "BatteryLevel": {
+                        "title": "Battery Level",
+                        "type": "boolean"
+                      },
+                      "Brightness": {
+                        "title": "Brightness",
+                        "type": "boolean"
+                      },
+                      "CarbonDioxideLevel": {
+                        "title": "Carbon Dioxide Level",
+                        "type": "boolean"
+                      },
+                      "CarbonDioxidePeakLevel": {
+                        "title": "Carbon Dioxide Peak Level",
+                        "type": "boolean"
+                      },
+                      "CarbonMonoxideLevel": {
+                        "title": "Carbon Monoxide Level",
+                        "type": "boolean"
+                      },
+                      "CarbonMonoxidePeakLevel": {
+                        "title": "Carbon Monoxide Peak Level",
+                        "type": "boolean"
+                      },
+                      "CharacteristicValueActiveTransitionCount": {
+                        "title": "Characteristic Value Active Transition Count",
+                        "type": "boolean"
+                      },
+                      "CharacteristicValueTransitionControl": {
+                        "title": "Characteristic Value Transition Control",
+                        "type": "boolean"
+                      },
+                      "ChargingState": {
+                        "title": "Charging State",
+                        "type": "boolean"
+                      },
+                      "ColorTemperature": {
+                        "title": "Color Temperature",
+                        "type": "boolean"
+                      },
+                      "CoolingThresholdTemperature": {
+                        "title": "Cooling Threshold Temperature",
+                        "type": "boolean"
+                      },
+                      "CurrentFanState": {
+                        "title": "Current Fan State",
+                        "type": "boolean"
+                      },
+                      "CurrentHorizontalTiltAngle": {
+                        "title": "Current Horizontal Tilt Angle",
+                        "type": "boolean"
+                      },
+                      "CurrentRelativeHumidity": {
+                        "title": "Current Relative Humidity",
+                        "type": "boolean"
+                      },
+                      "CurrentVerticalTiltAngle": {
+                        "title": "Current Vertical Tilt Angle",
+                        "type": "boolean"
+                      },
+                      "FilterLifeLevel": {
+                        "title": "Filter Life Level",
+                        "type": "boolean"
+                      },
+                      "HeatingThresholdTemperature": {
+                        "title": "Heating Threshold Temperature",
+                        "type": "boolean"
+                      },
+                      "HoldPosition": {
+                        "title": "Hold Position",
+                        "type": "boolean"
+                      },
+                      "Hue": {
+                        "title": "Hue",
+                        "type": "boolean"
+                      },
+                      "IsConfigured": {
+                        "title": "Is Configured",
+                        "type": "boolean"
+                      },
+                      "LockCurrentState": {
+                        "title": "Lock Current State",
+                        "type": "boolean"
+                      },
+                      "LockPhysicalControls": {
+                        "title": "Lock Physical Controls",
+                        "type": "boolean"
+                      },
+                      "LockTargetState": {
+                        "title": "Lock Target State",
+                        "type": "boolean"
+                      },
+                      "Name": {
+                        "title": "Name",
+                        "type": "boolean"
+                      },
+                      "NitrogenDioxideDensity": {
+                        "title": "Nitrogen Dioxide Density",
+                        "type": "boolean"
+                      },
+                      "ObstructionDetected": {
+                        "title": "Obstruction Detected",
+                        "type": "boolean"
+                      },
+                      "OutletInUse": {
+                        "title": "Outlet In Use",
+                        "type": "boolean"
+                      },
+                      "OzoneDensity": {
+                        "title": "Ozone Density",
+                        "type": "boolean"
+                      },
+                      "PM10Density": {
+                        "title": "PM10 Density",
+                        "type": "boolean"
+                      },
+                      "PM2_5Density": {
+                        "title": "PM2_5 Density",
+                        "type": "boolean"
+                      },
+                      "RelativeHumidityDehumidifierThreshold": {
+                        "title": "Relative Humidity Dehumidifier Threshold",
+                        "type": "boolean"
+                      },
+                      "RelativeHumidityHumidifierThreshold": {
+                        "title": "Relative Humidity Humidifier Threshold",
+                        "type": "boolean"
+                      },
+                      "RemainingDuration": {
+                        "title": "Remaining Duration",
+                        "type": "boolean"
+                      },
+                      "ResetFilterIndication": {
+                        "title": "Reset Filter Indication",
+                        "type": "boolean"
+                      },
+                      "RotationDirection": {
+                        "title": "Rotation Direction",
+                        "type": "boolean"
+                      },
+                      "RotationSpeed": {
+                        "title": "Rotation Speed",
+                        "type": "boolean"
+                      },
+                      "Saturation": {
+                        "title": "Saturation",
+                        "type": "boolean"
+                      },
+                      "SecuritySystemAlarmType": {
+                        "title": "Security System Alarm Type",
+                        "type": "boolean"
+                      },
+                      "ServiceLabelIndex": {
+                        "title": "Service Label Index",
+                        "type": "boolean"
+                      },
+                      "SetDuration": {
+                        "title": "Set Duration",
+                        "type": "boolean"
+                      },
+                      "StatusActive": {
+                        "title": "Status Active",
+                        "type": "boolean"
+                      },
+                      "StatusFault": {
+                        "title": "Status Fault",
+                        "type": "boolean"
+                      },
+                      "StatusLowBattery": {
+                        "title": "Status Low Battery",
+                        "type": "boolean"
+                      },
+                      "StatusTampered": {
+                        "title": "Status Tampered",
+                        "type": "boolean"
+                      },
+                      "SulphurDioxideDensity": {
+                        "title": "Sulphur Dioxide Density",
+                        "type": "boolean"
+                      },
+                      "SupportedCharacteristicValueTransitionConfiguration": {
+                        "title": "Supported Characteristic Value Transition Configuration",
+                        "type": "boolean"
+                      },
+                      "SwingMode": {
+                        "title": "Swing Mode",
+                        "type": "boolean"
+                      },
+                      "TargetFanState": {
+                        "title": "Target Fan State",
+                        "type": "boolean"
+                      },
+                      "TargetHorizontalTiltAngle": {
+                        "title": "Target Horizontal Tilt Angle",
+                        "type": "boolean"
+                      },
+                      "TargetRelativeHumidity": {
+                        "title": "Target Relative Humidity",
+                        "type": "boolean"
+                      },
+                      "TargetVerticalTiltAngle": {
+                        "title": "Target Vertical Tilt Angle",
+                        "type": "boolean"
+                      },
+                      "TemperatureDisplayUnits": {
+                        "title": "Temperature Display Units",
+                        "type": "boolean"
+                      },
+                      "VOCDensity": {
+                        "title": "VOC Density",
+                        "type": "boolean"
+                      },
+                      "WaterLevel": {
+                        "title": "Water Level",
+                        "type": "boolean"
+                      }
+                    }
+                  },
+                  "valves": {
+                    "title": "Valve Configuration",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "valveName": {
+                          "title": "Valve Name",
+                          "type": "string"
+                        },
+                        "valvePinNumber": {
+                          "title": "Valve Pin Number",
+                          "type": "integer"
+                        },
+                        "valveType": {
+                          "title": "Valve Type",
+                          "type": "integer"
+                        },
+                        "valveSetDuration": {
+                          "title": "Valve Set Duration",
+                          "type": "integer"
+                        },
+                        "characteristics": {
+                          "title": "Valve Characteristics",
+                          "type": "object",
+                          "properties": {
+                            "IsConfigured": {
+                              "title": "Is Configured",
+                              "type": "boolean"
+                            },
+                            "Name": {
+                              "title": "Name",
+                              "type": "boolean"
+                            },
+                            "RemainingDuration": {
+                              "title": "Remaining Duration",
+                              "type": "boolean"
+                            },
+                            "ServiceLabelIndex": {
+                              "title": "Service Label Index",
+                              "type": "boolean"
+                            },
+                            "SetDuration": {
+                              "title": "Set Duration",
+                              "type": "boolean"
+                            },
+                            "StatusFault": {
+                              "title": "Status Fault",
+                              "type": "boolean"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "debug": {
+        "title": "Debug",
+        "type": "boolean",
+        "default": true
+      }
+    }
+  },
+  "layout": [
+    "name",
+    {
+      "type": "flex",
+      "flex-flow": "row wrap",
+      "items": [
+        "serverurl",
+        "pollerseconds"
+      ]
+    },
+    {
+      "key": "devices",
+      "type": "section",
+      "title": "Devices",
+      "expandable": true,
+      "expanded": true,
+      "buttonText": "Add Device",
+      "items": [
+        "devices[].manufacturer",
+        "devices[].name",
+        "devices[].deviceId",
+        "devices[].token",
+        {
+          "key": "devices[].accessories",
+          "type": "section",
+          "title": "Accessories",
+          "expandable": true,
+          "expanded": true,
+          "buttonText": "Add Accessory",
+          "items": [
+            "devices[].accessories[].model",
+            "devices[].accessories[].name",
+            "devices[].accessories[].pinnumber",
+            "devices[].accessories[].typeOf",
+            {
+              "key": "devices[].accessories[].characteristics",
+              "type": "section",
+              "title": "Optional Characteristics",
+              "condition": {
+                "functionBody": "try { return !!model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf; } catch (e) { return false; }"
+              },
+              "items": [
+                {
+                  "key": "devices[].accessories[].characteristics.LockPhysicalControls",
+                  "condition": {
+                    "functionBody": "try { return ['AIR_PURIFIER','FANV2','HEATER_COOLER','HUMIDIFIER_DEHUMIDIFIER'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.Name",
+                  "condition": {
+                    "functionBody": "try { return ['AIR_PURIFIER','AIR_QUALITY_SENSOR','BATTERY','CARBON_DIOXIDE_SENSOR','CARBON_MONOXIDE_SENSOR','CONTACT_SENSOR','DOOR','FANV2','FAUCET','FILTER_MAINTENANCE','GARAGE_DOOR_OPENER','HEATER_COOLER','HUMIDIFIER_DEHUMIDIFIER','HUMIDITY_SENSOR','IRRIGATION_SYSTEM','LEAK_SENSOR','LIGHTBULB','LIGHT_SENSOR','LOCK_MECHANISM','MOTION_SENSOR','OCCUPANCY_SENSOR','OUTLET','SECURITY_SYSTEM','SMOKE_SENSOR','SWITCH','TEMPERATURE_SENSOR','THERMOSTAT','VALVE','WINDOW','WINDOW_COVERING'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.RotationSpeed",
+                  "condition": {
+                    "functionBody": "try { return ['AIR_PURIFIER','FANV2','HEATER_COOLER','HUMIDIFIER_DEHUMIDIFIER'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.SwingMode",
+                  "condition": {
+                    "functionBody": "try { return ['AIR_PURIFIER','FANV2','HEATER_COOLER','HUMIDIFIER_DEHUMIDIFIER'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.NitrogenDioxideDensity",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'AIR_QUALITY_SENSOR'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.OzoneDensity",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'AIR_QUALITY_SENSOR'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.PM10Density",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'AIR_QUALITY_SENSOR'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.PM2_5Density",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'AIR_QUALITY_SENSOR'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.StatusActive",
+                  "condition": {
+                    "functionBody": "try { return ['AIR_QUALITY_SENSOR','CARBON_DIOXIDE_SENSOR','CARBON_MONOXIDE_SENSOR','CONTACT_SENSOR','HUMIDITY_SENSOR','LEAK_SENSOR','LIGHT_SENSOR','MOTION_SENSOR','OCCUPANCY_SENSOR','SMOKE_SENSOR','TEMPERATURE_SENSOR'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.StatusFault",
+                  "condition": {
+                    "functionBody": "try { return ['AIR_QUALITY_SENSOR','CARBON_DIOXIDE_SENSOR','CARBON_MONOXIDE_SENSOR','CONTACT_SENSOR','FAUCET','HUMIDITY_SENSOR','IRRIGATION_SYSTEM','LEAK_SENSOR','LIGHT_SENSOR','MOTION_SENSOR','OCCUPANCY_SENSOR','SECURITY_SYSTEM','SMOKE_SENSOR','TEMPERATURE_SENSOR','VALVE'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.StatusLowBattery",
+                  "condition": {
+                    "functionBody": "try { return ['AIR_QUALITY_SENSOR','CARBON_DIOXIDE_SENSOR','CARBON_MONOXIDE_SENSOR','CONTACT_SENSOR','HUMIDITY_SENSOR','LEAK_SENSOR','LIGHT_SENSOR','MOTION_SENSOR','OCCUPANCY_SENSOR','SMOKE_SENSOR','TEMPERATURE_SENSOR'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.StatusTampered",
+                  "condition": {
+                    "functionBody": "try { return ['AIR_QUALITY_SENSOR','CARBON_DIOXIDE_SENSOR','CARBON_MONOXIDE_SENSOR','CONTACT_SENSOR','HUMIDITY_SENSOR','LEAK_SENSOR','LIGHT_SENSOR','MOTION_SENSOR','OCCUPANCY_SENSOR','SECURITY_SYSTEM','SMOKE_SENSOR','TEMPERATURE_SENSOR'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.SulphurDioxideDensity",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'AIR_QUALITY_SENSOR'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.VOCDensity",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'AIR_QUALITY_SENSOR'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.BatteryLevel",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'BATTERY'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.ChargingState",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'BATTERY'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CarbonDioxideLevel",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'CARBON_DIOXIDE_SENSOR'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CarbonDioxidePeakLevel",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'CARBON_DIOXIDE_SENSOR'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CarbonMonoxideLevel",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'CARBON_MONOXIDE_SENSOR'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CarbonMonoxidePeakLevel",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'CARBON_MONOXIDE_SENSOR'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.HoldPosition",
+                  "condition": {
+                    "functionBody": "try { return ['DOOR','WINDOW','WINDOW_COVERING'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.ObstructionDetected",
+                  "condition": {
+                    "functionBody": "try { return ['DOOR','WINDOW','WINDOW_COVERING'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CurrentFanState",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'FANV2'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.TargetFanState",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'FANV2'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.RotationDirection",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'FANV2'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.FilterLifeLevel",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'FILTER_MAINTENANCE'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.ResetFilterIndication",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'FILTER_MAINTENANCE'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.LockCurrentState",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'GARAGE_DOOR_OPENER'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.LockTargetState",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'GARAGE_DOOR_OPENER'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CoolingThresholdTemperature",
+                  "condition": {
+                    "functionBody": "try { return ['HEATER_COOLER','THERMOSTAT'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.HeatingThresholdTemperature",
+                  "condition": {
+                    "functionBody": "try { return ['HEATER_COOLER','THERMOSTAT'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.TemperatureDisplayUnits",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'HEATER_COOLER'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.RelativeHumidityDehumidifierThreshold",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'HUMIDIFIER_DEHUMIDIFIER'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.RelativeHumidityHumidifierThreshold",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'HUMIDIFIER_DEHUMIDIFIER'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.WaterLevel",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'HUMIDIFIER_DEHUMIDIFIER'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.RemainingDuration",
+                  "condition": {
+                    "functionBody": "try { return ['IRRIGATION_SYSTEM','VALVE'].includes(model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf); } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.Brightness",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'LIGHTBULB'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CharacteristicValueActiveTransitionCount",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'LIGHTBULB'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CharacteristicValueTransitionControl",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'LIGHTBULB'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.ColorTemperature",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'LIGHTBULB'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.Hue",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'LIGHTBULB'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.Saturation",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'LIGHTBULB'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.SupportedCharacteristicValueTransitionConfiguration",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'LIGHTBULB'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.OutletInUse",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'OUTLET'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.SecuritySystemAlarmType",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'SECURITY_SYSTEM'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CurrentRelativeHumidity",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'THERMOSTAT'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.TargetRelativeHumidity",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'THERMOSTAT'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.IsConfigured",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'VALVE'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.ServiceLabelIndex",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'VALVE'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.SetDuration",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'VALVE'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CurrentHorizontalTiltAngle",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'WINDOW_COVERING'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.TargetHorizontalTiltAngle",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'WINDOW_COVERING'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.CurrentVerticalTiltAngle",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'WINDOW_COVERING'; } catch (e) { return false; }"
+                  }
+                },
+                {
+                  "key": "devices[].accessories[].characteristics.TargetVerticalTiltAngle",
+                  "condition": {
+                    "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'WINDOW_COVERING'; } catch (e) { return false; }"
+                  }
+                }
+              ]
+            },
+            {
+              "key": "devices[].accessories[].valves",
+              "type": "section",
+              "title": "Valve",
+              "expandable": true,
+              "expanded": true,
+              "buttonText": "Add Valve",
+              "condition": {
+                "functionBody": "try { return model.devices[arrayIndices[0]].accessories[arrayIndices[1]].typeOf === 'IRRIGATION_SYSTEM'; } catch (e) { return false; }"
+              },
+              "items": [
+                {
+                  "key": "devices[].accessories[].valves[]",
+                  "items": [
+                    "devices[].accessories[].valves[].valveName",
+                    "devices[].accessories[].valves[].valvePinNumber",
+                    "devices[].accessories[].valves[].valveType",
+                    "devices[].accessories[].valves[].valveSetDuration",
+                    {
+                      "key": "devices[].accessories[].valves[].characteristics",
+                      "type": "section",
+                      "title": "Optional Characteristics",
+                      "expandable": true,
+                      "expanded": true,
+                      "items": [
+                        "devices[].accessories[].valves[].characteristics.IsConfigured",
+                        "devices[].accessories[].valves[].characteristics.Name",
+                        "devices[].accessories[].valves[].characteristics.RemainingDuration",
+                        "devices[].accessories[].valves[].characteristics.ServiceLabelIndex",
+                        "devices[].accessories[].valves[].characteristics.SetDuration",
+                        "devices[].accessories[].valves[].characteristics.StatusFault"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "debug"
+  ],
+  "customUi": true,
+  "customUiPath": "./homebridge-ui"
+}

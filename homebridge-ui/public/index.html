@@ -1,0 +1,594 @@
+<style>
+  .arduino-esp-ui { width: 100%; max-width: none; margin: 0; padding: 0 .75rem 1.5rem; box-sizing: border-box; }
+  .arduino-esp-ui, .arduino-esp-ui * { box-sizing: border-box; }
+  .arduino-esp-ui .sticky-actions { position: sticky; top: 0; z-index: 10; background: var(--bs-body-bg, #fff); padding: .75rem 0; border-bottom: 1px solid var(--bs-border-color, #dee2e6); margin-bottom: 1rem; }
+  .arduino-esp-ui .card + .card { margin-top: 1rem; }
+  .arduino-esp-ui .card, .arduino-esp-ui .nested-card { overflow: hidden; }
+  .arduino-esp-ui .nested-card { border: 1px solid var(--bs-border-color, #dee2e6); border-radius: .75rem; padding: 1rem; background: rgba(127,127,127,.03); }
+  .arduino-esp-ui .nested-card + .nested-card { margin-top: .75rem; }
+  .arduino-esp-ui .section-title { display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap: wrap; }
+  .arduino-esp-ui .characteristic-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .5rem 1rem; }
+  .arduino-esp-ui .muted { color: var(--bs-secondary-color, #6c757d); }
+  .arduino-esp-ui .badge-soft { background: rgba(13,110,253,.12); color: var(--bs-primary, #0d6efd); border: 1px solid rgba(13,110,253,.18); }
+  .arduino-esp-ui .empty-state { border: 2px dashed var(--bs-border-color, #dee2e6); border-radius: .75rem; padding: 1rem; text-align: center; }
+  .arduino-esp-ui .btn-toolbar .btn { margin-right: .5rem; }
+  .arduino-esp-ui .form-control, .arduino-esp-ui .form-select { max-width: 100%; }
+  .arduino-esp-ui label, .arduino-esp-ui .form-check-label { overflow-wrap: anywhere; }
+  @media (min-width: 1400px) {
+    .arduino-esp-ui { padding: 0 1rem 1.5rem; }
+    .arduino-esp-ui .characteristic-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  }
+</style>
+
+<div id="app" class="arduino-esp-ui"></div>
+
+<script>
+(() => {
+  const PLUGIN_ALIAS = "Arduino_ESP_Platform";
+  const TYPE_OPTIONS = [{"value": "AIR_PURIFIER", "label": "Air Purifier"}, {"value": "AIR_QUALITY_SENSOR", "label": "Air Quality Sensor"}, {"value": "BATTERY", "label": "Battery"}, {"value": "CARBON_DIOXIDE_SENSOR", "label": "Carbon Dioxide Sensor"}, {"value": "CARBON_MONOXIDE_SENSOR", "label": "Carbon Monoxide Sensor"}, {"value": "CONTACT_SENSOR", "label": "Contact Sensor"}, {"value": "DOOR", "label": "Door"}, {"value": "FANV2", "label": "Fanv2"}, {"value": "FAUCET", "label": "Faucet"}, {"value": "FILTER_MAINTENANCE", "label": "Filter Maintenance"}, {"value": "GARAGE_DOOR_OPENER", "label": "Garage Door Opener"}, {"value": "HEATER_COOLER", "label": "Heater/Cooler"}, {"value": "HUMIDIFIER_DEHUMIDIFIER", "label": "Humidifier/Dehumidifier"}, {"value": "HUMIDITY_SENSOR", "label": "Humidity Sensor"}, {"value": "IRRIGATION_SYSTEM", "label": "Irrigation System"}, {"value": "LEAK_SENSOR", "label": "Leak Sensor"}, {"value": "LIGHTBULB", "label": "Lightbulb"}, {"value": "LIGHT_SENSOR", "label": "Light Sensor"}, {"value": "LOCK_MECHANISM", "label": "Lock Mechanism"}, {"value": "MOTION_SENSOR", "label": "Motion Sensor"}, {"value": "OCCUPANCY_SENSOR", "label": "Occupancy Sensor"}, {"value": "OUTLET", "label": "Outlet"}, {"value": "SECURITY_SYSTEM", "label": "Security System"}, {"value": "SMOKE_SENSOR", "label": "Smoke Sensor"}, {"value": "SWITCH", "label": "Switch"}, {"value": "TEMPERATURE_SENSOR", "label": "Temperature Sensor"}, {"value": "THERMOSTAT", "label": "Thermostat"}, {"value": "VALVE", "label": "Valve"}, {"value": "WINDOW", "label": "Window"}, {"value": "WINDOW_COVERING", "label": "Window Covering"}];
+  const TYPE_CHARACTERISTICS = {"AIR_PURIFIER": ["Name", "LockPhysicalControls", "RotationSpeed", "SwingMode"], "FANV2": ["Name", "CurrentFanState", "LockPhysicalControls", "RotationDirection", "RotationSpeed", "SwingMode", "TargetFanState"], "HEATER_COOLER": ["Name", "CoolingThresholdTemperature", "HeatingThresholdTemperature", "LockPhysicalControls", "RotationSpeed", "SwingMode", "TemperatureDisplayUnits"], "HUMIDIFIER_DEHUMIDIFIER": ["Name", "LockPhysicalControls", "RelativeHumidityDehumidifierThreshold", "RelativeHumidityHumidifierThreshold", "RotationSpeed", "SwingMode", "WaterLevel"], "AIR_QUALITY_SENSOR": ["Name", "NitrogenDioxideDensity", "OzoneDensity", "PM10Density", "PM2_5Density", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered", "SulphurDioxideDensity", "VOCDensity"], "BATTERY": ["Name", "BatteryLevel", "ChargingState"], "CARBON_DIOXIDE_SENSOR": ["Name", "CarbonDioxideLevel", "CarbonDioxidePeakLevel", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered"], "CARBON_MONOXIDE_SENSOR": ["Name", "CarbonMonoxideLevel", "CarbonMonoxidePeakLevel", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered"], "CONTACT_SENSOR": ["Name", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered"], "DOOR": ["Name", "HoldPosition", "ObstructionDetected"], "FAUCET": ["Name", "StatusFault"], "FILTER_MAINTENANCE": ["Name", "FilterLifeLevel", "ResetFilterIndication"], "GARAGE_DOOR_OPENER": ["Name", "LockCurrentState", "LockTargetState"], "HUMIDITY_SENSOR": ["Name", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered"], "IRRIGATION_SYSTEM": ["Name", "RemainingDuration", "StatusFault"], "LEAK_SENSOR": ["Name", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered"], "LIGHTBULB": ["Name", "Brightness", "CharacteristicValueActiveTransitionCount", "CharacteristicValueTransitionControl", "ColorTemperature", "Hue", "Saturation", "SupportedCharacteristicValueTransitionConfiguration"], "LIGHT_SENSOR": ["Name", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered"], "LOCK_MECHANISM": ["Name"], "MOTION_SENSOR": ["Name", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered"], "OCCUPANCY_SENSOR": ["Name", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered"], "OUTLET": ["Name", "OutletInUse"], "SECURITY_SYSTEM": ["Name", "SecuritySystemAlarmType", "StatusFault", "StatusTampered"], "SMOKE_SENSOR": ["Name", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered"], "SWITCH": ["Name"], "TEMPERATURE_SENSOR": ["Name", "StatusActive", "StatusFault", "StatusLowBattery", "StatusTampered"], "THERMOSTAT": ["Name", "CoolingThresholdTemperature", "CurrentRelativeHumidity", "HeatingThresholdTemperature", "TargetRelativeHumidity"], "VALVE": ["Name", "IsConfigured", "RemainingDuration", "ServiceLabelIndex", "SetDuration", "StatusFault"], "WINDOW": ["Name", "HoldPosition", "ObstructionDetected"], "WINDOW_COVERING": ["Name", "CurrentHorizontalTiltAngle", "CurrentVerticalTiltAngle", "HoldPosition", "ObstructionDetected", "TargetHorizontalTiltAngle", "TargetVerticalTiltAngle"]};
+  const CHARACTERISTIC_TITLES = {"BatteryLevel": "Battery Level", "Brightness": "Brightness", "CarbonDioxideLevel": "Carbon Dioxide Level", "CarbonDioxidePeakLevel": "Carbon Dioxide Peak Level", "CarbonMonoxideLevel": "Carbon Monoxide Level", "CarbonMonoxidePeakLevel": "Carbon Monoxide Peak Level", "CharacteristicValueActiveTransitionCount": "Characteristic Value Active Transition Count", "CharacteristicValueTransitionControl": "Characteristic Value Transition Control", "ChargingState": "Charging State", "ColorTemperature": "Color Temperature", "CoolingThresholdTemperature": "Cooling Threshold Temperature", "CurrentFanState": "Current Fan State", "CurrentHorizontalTiltAngle": "Current Horizontal Tilt Angle", "CurrentRelativeHumidity": "Current Relative Humidity", "CurrentVerticalTiltAngle": "Current Vertical Tilt Angle", "FilterLifeLevel": "Filter Life Level", "HeatingThresholdTemperature": "Heating Threshold Temperature", "HoldPosition": "Hold Position", "Hue": "Hue", "IsConfigured": "Is Configured", "LockCurrentState": "Lock Current State", "LockPhysicalControls": "Lock Physical Controls", "LockTargetState": "Lock Target State", "Name": "Name", "NitrogenDioxideDensity": "Nitrogen Dioxide Density", "ObstructionDetected": "Obstruction Detected", "OutletInUse": "Outlet In Use", "OzoneDensity": "Ozone Density", "PM10Density": "PM10 Density", "PM2_5Density": "PM2_5 Density", "RelativeHumidityDehumidifierThreshold": "Relative Humidity Dehumidifier Threshold", "RelativeHumidityHumidifierThreshold": "Relative Humidity Humidifier Threshold", "RemainingDuration": "Remaining Duration", "ResetFilterIndication": "Reset Filter Indication", "RotationDirection": "Rotation Direction", "RotationSpeed": "Rotation Speed", "Saturation": "Saturation", "SecuritySystemAlarmType": "Security System Alarm Type", "ServiceLabelIndex": "Service Label Index", "SetDuration": "Set Duration", "StatusActive": "Status Active", "StatusFault": "Status Fault", "StatusLowBattery": "Status Low Battery", "StatusTampered": "Status Tampered", "SulphurDioxideDensity": "Sulphur Dioxide Density", "SupportedCharacteristicValueTransitionConfiguration": "Supported Characteristic Value Transition Configuration", "SwingMode": "Swing Mode", "TargetFanState": "Target Fan State", "TargetHorizontalTiltAngle": "Target Horizontal Tilt Angle", "TargetRelativeHumidity": "Target Relative Humidity", "TargetVerticalTiltAngle": "Target Vertical Tilt Angle", "TemperatureDisplayUnits": "Temperature Display Units", "VOCDensity": "VOC Density", "WaterLevel": "Water Level"};
+  const VALVE_CHARACTERISTIC_TITLES = {"IsConfigured": "Is Configured", "Name": "Name", "RemainingDuration": "Remaining Duration", "ServiceLabelIndex": "Service Label Index", "SetDuration": "Set Duration", "StatusFault": "Status Fault"};
+  const VALVE_CHARACTERISTIC_ORDER = ["Name", "IsConfigured", "RemainingDuration", "ServiceLabelIndex", "SetDuration", "StatusFault"];
+
+  let state = null;
+  let syncTimer = null;
+  let syncInFlight = false;
+  let pendingSync = false;
+  let dirty = false;
+
+  function defaultConfig() {
+    return {
+      platform: PLUGIN_ALIAS,
+      name: 'Arduino ESP Platform',
+      serverurl: 'http://192.168.2.47:8181',
+      pollerseconds: 10,
+      devices: [],
+      debug: true,
+    };
+  }
+
+  function defaultDevice() {
+    return {
+      name: '',
+      token: '',
+      deviceId: 0,
+      manufacturer: '',
+      accessories: [],
+    };
+  }
+
+  function defaultAccessory(typeOf = 'OUTLET') {
+    return normalizeAccessory({
+      model: '',
+      name: '',
+      pinnumber: 0,
+      typeOf,
+      characteristics: {},
+      valves: typeOf === 'IRRIGATION_SYSTEM' ? [] : undefined,
+    });
+  }
+
+  function defaultValve() {
+    return {
+      valveName: '',
+      valvePinNumber: 0,
+      valveType: 1,
+      valveSetDuration: 120,
+      characteristics: {},
+    };
+  }
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[ch]);
+  }
+
+  function toBool(value) {
+    return value === true || value === 'true' || value === 1 || value === '1';
+  }
+
+  function normalizeAccessory(accessory) {
+    const normalized = clone(accessory || {});
+    normalized.model = normalized.model ?? '';
+    normalized.name = normalized.name ?? '';
+    normalized.pinnumber = Number.isFinite(Number(normalized.pinnumber)) ? Number(normalized.pinnumber) : 0;
+    normalized.typeOf = normalized.typeOf || 'OUTLET';
+    normalized.characteristics = normalized.characteristics && typeof normalized.characteristics === 'object' && !Array.isArray(normalized.characteristics)
+      ? normalized.characteristics : {};
+
+    const allowed = new Set(TYPE_CHARACTERISTICS[normalized.typeOf] || []);
+    normalized.characteristics = Object.fromEntries(
+      Object.entries(normalized.characteristics)
+        .filter(([key]) => allowed.has(key))
+        .map(([key, value]) => [key, toBool(value)])
+    );
+
+    if (normalized.typeOf === 'IRRIGATION_SYSTEM') {
+      normalized.valves = Array.isArray(normalized.valves) ? normalized.valves.map(normalizeValve) : [];
+    } else {
+      delete normalized.valves;
+    }
+
+    return normalized;
+  }
+
+  function normalizeValve(valve) {
+    const normalized = clone(valve || {});
+    normalized.valveName = normalized.valveName ?? '';
+    normalized.valvePinNumber = Number.isFinite(Number(normalized.valvePinNumber)) ? Number(normalized.valvePinNumber) : 0;
+    normalized.valveType = Number.isFinite(Number(normalized.valveType)) ? Number(normalized.valveType) : 1;
+    normalized.valveSetDuration = Number.isFinite(Number(normalized.valveSetDuration)) ? Number(normalized.valveSetDuration) : 120;
+    normalized.characteristics = normalized.characteristics && typeof normalized.characteristics === 'object' && !Array.isArray(normalized.characteristics)
+      ? normalized.characteristics : {};
+    normalized.characteristics = Object.fromEntries(
+      Object.entries(normalized.characteristics)
+        .filter(([key]) => VALVE_CHARACTERISTIC_ORDER.includes(key))
+        .map(([key, value]) => [key, toBool(value)])
+    );
+    return normalized;
+  }
+
+  function normalizeConfig(config) {
+    const base = { ...defaultConfig(), ...(config || {}) };
+    base.platform = PLUGIN_ALIAS;
+    base.name = base.name ?? 'Arduino ESP Platform';
+    base.serverurl = base.serverurl ?? 'http://192.168.2.47:8181';
+    base.pollerseconds = Number.isFinite(Number(base.pollerseconds)) ? Number(base.pollerseconds) : 10;
+    base.debug = toBool(base.debug);
+    base.devices = Array.isArray(base.devices) ? base.devices.map((device) => {
+      const d = clone(device || {});
+      d.name = d.name ?? '';
+      d.token = d.token ?? '';
+      d.deviceId = Number.isFinite(Number(d.deviceId)) ? Number(d.deviceId) : 0;
+      d.manufacturer = d.manufacturer ?? '';
+      d.accessories = Array.isArray(d.accessories) ? d.accessories.map(normalizeAccessory) : [];
+      return d;
+    }) : [];
+    return base;
+  }
+
+  function getTypeLabel(value) {
+    const found = TYPE_OPTIONS.find((option) => option.value === value);
+    return found ? found.label : value;
+  }
+
+  function characteristicsForType(typeOf) {
+    return TYPE_CHARACTERISTICS[typeOf] || [];
+  }
+
+  function markDirty() {
+    dirty = true;
+    scheduleSync();
+    updateStatus();
+  }
+
+  function updateStatus(extra = '') {
+    const el = document.getElementById('statusText');
+    if (!el) return;
+    if (syncInFlight) {
+      el.textContent = 'Synchronisation…';
+      return;
+    }
+    if (extra) {
+      el.textContent = extra;
+      return;
+    }
+    el.textContent = dirty ? 'Modifications non sauvegardées' : 'Configuration synchronisée';
+  }
+
+  function scheduleSync() {
+    window.clearTimeout(syncTimer);
+    syncTimer = window.setTimeout(syncConfig, 350);
+  }
+
+  async function syncConfig() {
+    if (!state) return;
+    if (syncInFlight) {
+      pendingSync = true;
+      return;
+    }
+    syncInFlight = true;
+    updateStatus();
+    try {
+      await homebridge.updatePluginConfig([clone(state)]);
+      pendingSync = false;
+      updateStatus();
+    } catch (error) {
+      console.error(error);
+      homebridge.toast.error(error?.message || String(error), 'Update failed');
+      updateStatus('Erreur de synchronisation');
+    } finally {
+      syncInFlight = false;
+      if (pendingSync) {
+        pendingSync = false;
+        syncConfig();
+      }
+    }
+  }
+
+  async function saveConfig() {
+    try {
+      await syncConfig();
+      await homebridge.savePluginConfig();
+      dirty = false;
+      updateStatus('Configuration sauvegardée');
+      homebridge.toast.success('Configuration sauvegardée.', 'Arduino ESP Platform');
+    } catch (error) {
+      console.error(error);
+      homebridge.toast.error(error?.message || String(error), 'Save failed');
+      updateStatus('Erreur de sauvegarde');
+    }
+  }
+
+  async function reloadConfig() {
+    try {
+      const blocks = await homebridge.getPluginConfig();
+      const current = Array.isArray(blocks)
+        ? (blocks.find((item) => item.platform === PLUGIN_ALIAS) || blocks[0])
+        : null;
+      state = normalizeConfig(current || defaultConfig());
+      dirty = false;
+      render();
+      updateStatus('Configuration chargée');
+    } catch (error) {
+      console.error(error);
+      homebridge.toast.error(error?.message || String(error), 'Load failed');
+    }
+  }
+
+  function renderCheckbox(pathAttrs, checked, label) {
+    return `
+      <label class="form-check form-switch mb-1">
+        <input class="form-check-input" type="checkbox" ${pathAttrs} ${checked ? 'checked' : ''}>
+        <span class="form-check-label">${escapeHtml(label)}</span>
+      </label>
+    `;
+  }
+
+  function renderCharacteristics(deviceIndex, accessoryIndex, accessory) {
+    const keys = characteristicsForType(accessory.typeOf);
+    if (!keys.length) {
+      return `<div class="empty-state muted">Aucune caractéristique optionnelle pour ce type.</div>`;
+    }
+    return `
+      <div class="nested-card mt-3">
+        <div class="section-title mb-2">
+          <h6 class="mb-0">Optional Characteristics</h6>
+          <span class="badge rounded-pill badge-soft">${escapeHtml(getTypeLabel(accessory.typeOf))}</span>
+        </div>
+        <div class="characteristic-grid">
+          ${keys.map((key) => renderCheckbox(
+            `data-char-key="${key}" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}"`,
+            !!accessory.characteristics?.[key],
+            CHARACTERISTIC_TITLES[key] || key,
+          )).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderValveCharacteristics(deviceIndex, accessoryIndex, valveIndex, valve) {
+    return `
+      <div class="nested-card mt-3">
+				<div class="section-title mb-2">
+					<h6 class="mb-2">Optional Characteristics</h6>
+					<span class="badge rounded-pill badge-soft">${escapeHtml(getTypeLabel("VALVE"))}</span>
+				</div>
+        <div class="characteristic-grid">
+          ${VALVE_CHARACTERISTIC_ORDER.map((key) => renderCheckbox(
+            `data-valve-char-key="${key}" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}" data-valve-index="${valveIndex}"`,
+            !!valve.characteristics?.[key],
+            VALVE_CHARACTERISTIC_TITLES[key] || key,
+          )).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderValves(deviceIndex, accessoryIndex, accessory) {
+    if (accessory.typeOf !== 'IRRIGATION_SYSTEM') return '';
+    const valves = Array.isArray(accessory.valves) ? accessory.valves : [];
+    return `
+      <div class="nested-card mt-3">
+        <div class="section-title mb-3">
+          <h5 class="mb-0">Valves</h5>
+        </div>
+        ${valves.length ? valves.map((valve, valveIndex) => `
+          <div class="nested-card">
+            <div class="section-title mb-3">
+              <div>
+                <strong>Valve ${valveIndex + 1}</strong>
+                <div class="muted small">${escapeHtml(valve.valveName || 'Unnamed valve')}</div>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-danger" data-action="remove-valve" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}" data-valve-index="${valveIndex}">Delete</button>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Valve Name</label>
+                <input class="form-control" type="text" value="${escapeHtml(valve.valveName)}" data-valve-field="valveName" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}" data-valve-index="${valveIndex}">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Valve Pin</label>
+                <input class="form-control" type="number" value="${escapeHtml(valve.valvePinNumber)}" data-valve-field="valvePinNumber" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}" data-valve-index="${valveIndex}">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Valve Type</label>
+                <input class="form-control" type="number" value="${escapeHtml(valve.valveType)}" data-valve-field="valveType" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}" data-valve-index="${valveIndex}">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Set Duration</label>
+                <input class="form-control" type="number" value="${escapeHtml(valve.valveSetDuration)}" data-valve-field="valveSetDuration" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}" data-valve-index="${valveIndex}">
+              </div>
+            </div>
+            ${renderValveCharacteristics(deviceIndex, accessoryIndex, valveIndex, valve)}
+          </div>
+        `).join('') : `<div class="empty-state muted">Aucune valve. Utilise Add Valve pour en créer une.</div>`}
+        <div class="mt-3 d-flex justify-content-end">
+          <button type="button" class="btn btn-sm btn-outline-primary" data-action="add-valve" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}">Add Valve</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderAccessory(deviceIndex, accessory, accessoryIndex) {
+    return `
+      <div class="nested-card mt-3">
+        <div class="section-title mb-3">
+          <div>
+            <strong>Accessory ${accessoryIndex + 1}</strong>
+            <div class="muted small">${escapeHtml(accessory.name || getTypeLabel(accessory.typeOf))}</div>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-danger" data-action="remove-accessory" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}">Delete</button>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Model</label>
+            <input class="form-control" type="text" value="${escapeHtml(accessory.model)}" data-accessory-field="model" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Accessory Name</label>
+            <input class="form-control" type="text" value="${escapeHtml(accessory.name)}" data-accessory-field="name" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Pin Number</label>
+            <input class="form-control" type="number" value="${escapeHtml(accessory.pinnumber)}" data-accessory-field="pinnumber" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}">
+          </div>
+          <div class="col-md-8">
+            <label class="form-label">Type</label>
+            <select class="form-select" data-accessory-field="typeOf" data-device-index="${deviceIndex}" data-accessory-index="${accessoryIndex}">
+              ${TYPE_OPTIONS.map((option) => `<option value="${option.value}" ${option.value === accessory.typeOf ? 'selected' : ''}>${escapeHtml(option.label)}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        ${renderCharacteristics(deviceIndex, accessoryIndex, accessory)}
+        ${renderValves(deviceIndex, accessoryIndex, accessory)}
+      </div>
+    `;
+  }
+
+  function renderDevice(device, deviceIndex) {
+    return `
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="section-title mb-3">
+            <div>
+              <h4 class="mb-0">Device ${deviceIndex + 1}</h4>
+              <div class="muted">${escapeHtml(device.name || 'Unnamed device')}</div>
+            </div>
+            <button type="button" class="btn btn-outline-danger" data-action="remove-device" data-device-index="${deviceIndex}">Delete Device</button>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Manufacturer</label>
+              <input class="form-control" type="text" value="${escapeHtml(device.manufacturer)}" data-device-field="manufacturer" data-device-index="${deviceIndex}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Device Name</label>
+              <input class="form-control" type="text" value="${escapeHtml(device.name)}" data-device-field="name" data-device-index="${deviceIndex}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Device ID</label>
+              <input class="form-control" type="number" value="${escapeHtml(device.deviceId)}" data-device-field="deviceId" data-device-index="${deviceIndex}">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Token</label>
+              <input class="form-control" type="text" value="${escapeHtml(device.token)}" data-device-field="token" data-device-index="${deviceIndex}">
+            </div>
+          </div>
+          <div class="nested-card mt-4">
+            <div class="section-title mb-3">
+              <h5 class="mb-0">Accessories</h5>
+            </div>
+            ${device.accessories.length ? device.accessories.map((accessory, accessoryIndex) => renderAccessory(deviceIndex, accessory, accessoryIndex)).join('') : `<div class="empty-state muted">Aucun accessoire. Utilise Add Accessory pour en créer un.</div>`}
+            <div class="mt-3 d-flex justify-content-end">
+              <button type="button" class="btn btn-sm btn-outline-primary" data-action="add-accessory" data-device-index="${deviceIndex}">Add Accessory</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function render() {
+    const app = document.getElementById('app');
+    if (!state) {
+      app.innerHTML = '<div class="card"><div class="card-body">Loading…</div></div>';
+      return;
+    }
+
+    app.innerHTML = `
+      <div class="sticky-actions">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <div>
+            <h3 class="mb-1">Arduino ESP Platform Custom UI</h3>
+            <div class="muted small">Gestion stable des devices, accessories et valves sans le bug de suppression du formulaire généré.</div>
+          </div>
+          <div class="btn-toolbar">
+            <button type="button" class="btn btn-outline-secondary" id="reloadBtn">Reload</button>
+            <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
+          </div>
+        </div>
+        <div class="mt-2 small muted" id="statusText">Configuration chargée</div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title">General Settings</h4>
+          <div class="row g-3">
+            <div class="col-md-5">
+              <label class="form-label">Platform Name</label>
+              <input class="form-control" type="text" value="${escapeHtml(state.name)}" data-top-field="name">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Poller Seconds</label>
+              <input class="form-control" type="number" min="1" value="${escapeHtml(state.pollerseconds)}" data-top-field="pollerseconds">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+              <label class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" data-top-field="debug" ${state.debug ? 'checked' : ''}>
+                <span class="form-check-label ms-2">Debug</span>
+              </label>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Server URL</label>
+              <input class="form-control" type="text" value="${escapeHtml(state.serverurl)}" data-top-field="serverurl">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h4 class="mb-0">Devices</h4>
+      </div>
+
+      ${state.devices.length ? state.devices.map((device, deviceIndex) => renderDevice(device, deviceIndex)).join('') : `<div class="empty-state muted">Aucun device. Utilise Add Device pour commencer.</div>`}
+      <div class="mt-3 d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" data-action="add-device">Add Device</button>
+      </div>
+    `;
+
+    document.getElementById('saveBtn').addEventListener('click', saveConfig);
+    document.getElementById('reloadBtn').addEventListener('click', reloadConfig);
+    updateStatus();
+  }
+
+  function readValue(el) {
+    if (el.type === 'checkbox') return el.checked;
+    if (el.type === 'number') return Number(el.value || 0);
+    return el.value;
+  }
+
+  document.addEventListener('change', (event) => {
+    const el = event.target;
+    if (!state || !(el instanceof HTMLElement)) return;
+
+    if (el.dataset.topField) {
+      state[el.dataset.topField] = readValue(el);
+      markDirty();
+      return;
+    }
+
+    if (el.dataset.deviceField) {
+      const d = Number(el.dataset.deviceIndex);
+      state.devices[d][el.dataset.deviceField] = readValue(el);
+      markDirty();
+      return;
+    }
+
+    if (el.dataset.accessoryField) {
+      const d = Number(el.dataset.deviceIndex);
+      const a = Number(el.dataset.accessoryIndex);
+      const field = el.dataset.accessoryField;
+      state.devices[d].accessories[a][field] = readValue(el);
+      if (field === 'typeOf') {
+        state.devices[d].accessories[a] = normalizeAccessory(state.devices[d].accessories[a]);
+        render();
+      }
+      markDirty();
+      return;
+    }
+
+    if (el.dataset.charKey) {
+      const d = Number(el.dataset.deviceIndex);
+      const a = Number(el.dataset.accessoryIndex);
+      const key = el.dataset.charKey;
+      state.devices[d].accessories[a].characteristics[key] = el.checked;
+      markDirty();
+      return;
+    }
+
+    if (el.dataset.valveField) {
+      const d = Number(el.dataset.deviceIndex);
+      const a = Number(el.dataset.accessoryIndex);
+      const v = Number(el.dataset.valveIndex);
+      state.devices[d].accessories[a].valves[v][el.dataset.valveField] = readValue(el);
+      markDirty();
+      return;
+    }
+
+    if (el.dataset.valveCharKey) {
+      const d = Number(el.dataset.deviceIndex);
+      const a = Number(el.dataset.accessoryIndex);
+      const v = Number(el.dataset.valveIndex);
+      const key = el.dataset.valveCharKey;
+      state.devices[d].accessories[a].valves[v].characteristics[key] = el.checked;
+      markDirty();
+      return;
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-action]');
+    if (!button || !state) return;
+    const action = button.dataset.action;
+    const d = Number(button.dataset.deviceIndex);
+    const a = Number(button.dataset.accessoryIndex);
+    const v = Number(button.dataset.valveIndex);
+
+    switch (action) {
+      case 'add-device':
+        state.devices.push(defaultDevice());
+        render();
+        markDirty();
+        break;
+      case 'remove-device':
+        state.devices.splice(d, 1);
+        render();
+        markDirty();
+        break;
+      case 'add-accessory':
+        state.devices[d].accessories.push(defaultAccessory());
+        render();
+        markDirty();
+        break;
+      case 'remove-accessory':
+        state.devices[d].accessories.splice(a, 1);
+        render();
+        markDirty();
+        break;
+      case 'add-valve':
+        state.devices[d].accessories[a].valves.push(defaultValve());
+        render();
+        markDirty();
+        break;
+      case 'remove-valve':
+        state.devices[d].accessories[a].valves.splice(v, 1);
+        render();
+        markDirty();
+        break;
+    }
+  });
+
+  reloadConfig();
+})();
+</script>
