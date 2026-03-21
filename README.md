@@ -51,74 +51,74 @@ A full project suite for **Homebridge + Arduino/ESP** with a **PHP/MySQL server*
 	"serverurl": "http://IP-SERVER:8181",
 	"pollerseconds": 1,
 	"devices": [
-			{
-					"name": "Garden Controller",
-					"token": "REPLACE_WITH_PROJECT_TOKEN",
-					"deviceId": 1,
-					"manufacturer": "Domi",
-					"accessories": [
-							{
-									"model": "ESP-Light",
-									"name": "Patio Light",
-									"pinnumber": 0,
-									"typeOf": "OUTLET",
-									"characteristics": {
-											"Name": true,
-											"OutletInUse": true
-									}
-							},
-							{
-									"model": "ESP-Irrigation",
-									"name": "Front Yard",
-									"pinnumber": 3,
-									"typeOf": "IRRIGATION_SYSTEM",
-									"characteristics": {
-											"Name": true,
-											"RemainingDuration": true,
-											"StatusFault": true
-									},
-									"valves": [
-											{
-													"valveName": "Zone 1",
-													"valvePinNumber": 4,
-													"valveType": 1,
-													"valveSetDuration": 120,
-													"characteristics": {
-															"Name": true,
-															"RemainingDuration": true,
-															"SetDuration": true,
-															"IsConfigured": true,
-															"ServiceLabelIndex": true,
-															"StatusFault": true
-													}
-											},
-											{
-													"valveName": "Zone 2",
-													"valvePinNumber": 5,
-													"valveType": 1,
-													"valveSetDuration": 120,
-													"characteristics": {
-															"Name": true,
-															"RemainingDuration": true,
-															"SetDuration": true,
-															"IsConfigured": true,
-															"ServiceLabelIndex": true,
-															"StatusFault": true
-													}
-											}
-									]
+		{
+			"name": "Garden Controller",
+			"token": "REPLACE_WITH_PROJECT_TOKEN",
+			"deviceId": 1,
+			"manufacturer": "Domi",
+			"accessories": [
+				{
+					"model": "ESP-Light",
+					"name": "Patio Light",
+					"pinnumber": 0,
+					"typeOf": "OUTLET",
+					"characteristics": {
+						"Name": true,
+						"OutletInUse": true
+					}
+				},
+				{
+					"model": "ESP-Irrigation",
+					"name": "Front Yard",
+					"pinnumber": 3,
+					"typeOf": "IRRIGATION_SYSTEM",
+					"characteristics": {
+						"Name": true,
+						"RemainingDuration": true,
+						"StatusFault": true
+					},
+					"valves": [
+						{
+							"valveName": "Zone 1",
+							"valvePinNumber": 4,
+							"valveType": 1,
+							"valveSetDuration": 120,
+							"characteristics": {
+								"Name": true,
+								"RemainingDuration": true,
+								"SetDuration": true,
+								"IsConfigured": true,
+								"ServiceLabelIndex": true,
+								"StatusFault": true
 							}
+						},
+						{
+							"valveName": "Zone 2",
+							"valvePinNumber": 5,
+							"valveType": 1,
+							"valveSetDuration": 120,
+							"characteristics": {
+								"Name": true,
+								"RemainingDuration": true,
+								"SetDuration": true,
+								"IsConfigured": true,
+								"ServiceLabelIndex": true,
+								"StatusFault": true
+							}
+						}
 					]
-			}
+				}
+			]
+		}
 	],
 	"debug": false,
 	"_bridge": {
-			"username": "0E:8D:EE:31:65:DA",
-			"port": 33823,
-			"name": "Arduino Esp Platform",
-			"model": "ESP",
-			"manufacturer": "Domi",
-			"firmwareRevision": "1.0"
+		"username": "0E:8D:EE:31:65:DA",
+		"port": 33823,
+		"name": "Arduino Esp Platform",
+		"model": "ESP",
+		"manufacturer": "Domi",
+		"firmwareRevision": "1.0"
 	}
 }
 ```
