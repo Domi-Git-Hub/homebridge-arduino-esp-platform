@@ -1,15 +1,15 @@
-# Homebridge Arduino ESP Platform + PHP Server + Libray Arduino IDE
+## Homebridge Arduino ESP Platform + PHP Server + Libray Arduino IDE
 
 A full project suite for **Homebridge + Arduino/ESP** with a **PHP/MySQL server**, **admin dashboard**, **user dashboard**, **token-per-project API**, and a **dynamic Homebridge platform plugin** using JSON per virtual pin.
 
-## What is included
+### What is included
 
 - `plugin/` → npm package `homebridge-arduino-esp-platform`
 - `server/` → Apache/PHP/MySQL web app + HTTP/HTTPS JSON API
 - `server/sql/schema.sql` → database schema + first admin account
 - `server/apache/arduino-esp.conf` → Apache vhost example
 
-## Main behavior
+### Main behavior
 
 - One **user account** can own multiple **projects**.
 - Every project gets a **server-generated token**.
@@ -29,7 +29,7 @@ A full project suite for **Homebridge + Arduino/ESP** with a **PHP/MySQL server*
 - The plugin **polls the server** and updates HomeKit when the server-side JSON changes.
 - If a VPin does not exist yet, the plugin **seeds a full JSON object once** using the generated required/optional characteristic set.
 
-## Example JSON
+### Example JSON
 
 ```json
 {
@@ -42,7 +42,7 @@ A full project suite for **Homebridge + Arduino/ESP** with a **PHP/MySQL server*
 }
 ```
 
-## Example Homebridge config
+### Example Homebridge config
 
 ```json
 {
@@ -125,17 +125,17 @@ A full project suite for **Homebridge + Arduino/ESP** with a **PHP/MySQL server*
 
 ---
 
-# Plugin install
+## Plugin install
 
-## 1) Copy the plugin
+### 1) Copy the plugin
 
 Place `plugin/` in its own git repository or directly in your Homebridge plugin development folder.
 
-## 2) Install dependencies
+### 2) Install dependencies
 
 This plugin intentionally uses **no external runtime dependency** and relies on Node 20+ built-in `fetch`.
 
-## 3) Install in Homebridge
+### 3) Install in Homebridge
 
 ```bash
 npm install -g homebridge-arduino-esp-platform
@@ -145,16 +145,16 @@ Then configure it from Homebridge UI using the included `config.schema.json`.
 
 ---
 
-# Server install
+## Server install
 
-## Requirements
+### Requirements
 
 - Apache 2.4+
 - PHP 8.1+
 - MySQL / MariaDB
 - `mod_rewrite` enabled
 
-## 1) Copy the server folder
+### 1) Copy the server folder
 
 Copy `arduino-esp-server` to your Apache document root, for example:
 
@@ -162,7 +162,7 @@ Copy `arduino-esp-server` to your Apache document root, for example:
 /var/www/arduino-esp-server
 ```
 
-## 2) Create the database
+### 2) Create the database
 
 Import:
 
@@ -170,7 +170,7 @@ Import:
 mysql -u root -p < arduino-esp-server/sql/schema.sql
 ```
 
-## 3) Configure the app
+### 3) Configure the app
 
 Copy:
 
@@ -180,13 +180,13 @@ cp arduino-esp-server/src/config.sample.php arduino-esp-server/src/config.php
 
 Edit the database credentials and base URL.
 
-## 4) Enable the Apache site
+### 4) Enable the Apache site
 
 Copy `arduino-esp-server/apache/arduino-esp.conf` to `/etc/apache2/sites-available/arduino-esp.conf`
 
 Create a symbolic link `sudo ln -s /etc/apache2/sites-available/arduino-esp.conf /etc/apache2/sites-enabled/arduino-esp.conf`
 
-## 5) Open port 8181 in Apache2
+### 5) Open port 8181 in Apache2
 
 sudo nano /etc/apache2/ports.conf
 
@@ -207,13 +207,13 @@ Listen 8181
     Listen 443
 </IfModule>
 
-## 6) Open the web UI
+### 6) Open the web UI
 
 - Login page: `/`
 - Admin page: `/admin.php`
 - User dashboard: `/dashboard.php`
 
-### Default admin account
+#### Default admin account
 
 Created by `schema.sql`:
 
@@ -224,21 +224,21 @@ Change it immediately after first login.
 
 ---
 
-# API usage
+## API usage
 
-## Update a VPin
+### Update a VPin
 
 ```bash
 curl "http://IP-SERVER:8181/YOUR_TOKEN/update/V0?value={"Name":"Light","On":"1"}"
 ```
 
-## Read a VPin
+### Read a VPin
 
 ```bash
 curl "http://IP-SERVER:8181/YOUR_TOKEN/get/V0"
 ```
 
-## POST update
+### POST update
 
 ```bash
 curl -X POST "http://IP-SERVER:8181/YOUR_TOKEN/update/V0" \
@@ -247,7 +247,7 @@ curl -X POST "http://IP-SERVER:8181/YOUR_TOKEN/update/V0" \
 
 ---
 
-# Notes
+## Notes
 
 - The plugin keeps JSON keys aligned with the HomeKit characteristic display names.
 - Missing values are auto-filled with defaults in memory.
