@@ -28,8 +28,8 @@
   "homepage": "https://github.com/Domi-Git-Hub/homebridge-arduino-esp-platform#readme",
   "files": [
     "index.js",
-		"arduino-esp-server",
-		"Library_Arduino_IDE",
+    "arduino-esp-server",
+    "Library_Arduino_IDE",
     "lib",
     "config.schema.json",
     "homebridge-ui",
@@ -39,6 +39,13 @@
   ],
   "scripts": {
     "lint": "node --check index.js && node --check lib/platform.js",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "release": "release-it"
+  },
+  "devDependencies": {
+    "release-it": "^19.2.4"
+  },
+  "overrides": {
+    "undici": "6.24.0"
   }
 }
