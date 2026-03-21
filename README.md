@@ -1,4 +1,5 @@
-# Homebridge Arduino ESP Platform + PHP Server + Libray Arduino IDE
+# Homebridge Arduino ESP Platform 
++ PHP Server + Libray Arduino IDE
 
 A full project suite for **Homebridge + Arduino/ESP** with a **PHP/MySQL server**, **admin dashboard**, **user dashboard**, **token-per-project API**, and a **dynamic Homebridge platform plugin** using JSON per virtual pin.
 
