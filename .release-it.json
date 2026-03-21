@@ -7,11 +7,13 @@
     "requireCleanWorkingDir": true,
     "requireUpstream": true
   },
-  "github": {
-    "release": true
-  },
   "npm": {
     "publish": true
+  },
+  "github": {
+    "release": true,
+    "releaseName": "Release ${version}",
+    "releaseNotes": "echo Release ${version}"
   },
   "hooks": {
     "before:init": [
