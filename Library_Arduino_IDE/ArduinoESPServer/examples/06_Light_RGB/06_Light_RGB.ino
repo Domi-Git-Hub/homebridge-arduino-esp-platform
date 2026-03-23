@@ -5,7 +5,7 @@
   Example 01 - Outlet
   ============================================================
   JSON format used by this example:
-  {"Name":"Led","Brightness":"100","Characteristic Value Active Transition Count":"0","Characteristic Value Transition Control":"","Color Temperature":"163","Configured Name":"Led","Hue":"0","On":"0","Saturation":"100","Supported Characteristic Value Transition Configuration":""}
+  {"Name":"Led","Brightness":"100","Hue":"0","On":"0","Saturation":"100"}
 
   What this example does:
     - Polls one VPin from the server

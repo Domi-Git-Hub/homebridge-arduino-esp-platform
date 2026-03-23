@@ -5,7 +5,7 @@
   Example 03 - Fan
   ============================================================
   JSON format used by this example:
-  {"Name":"valve","Active":"0","Configured Name":"valve","In Use":"0","Is Configured":"1","Remaining Duration":"0","Service Label Index":"1","Set Duration":"300","Status Fault":"0","Valve Type":"0"}
+  {"Name":"Zone 1","Active":"0","In Use":"0","Valve Type":"1","Is Configured":"1","Remaining Duration":"0","Service Label Index":"1","Set Duration":"120","Status Fault":"0"}
 
   What this example does:
     - Polls one VPin from the server
@@ -45,7 +45,7 @@ ESPServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN)
 // Runtime state block
 // ------------------------------------------------------------
 unsigned long lastPollMs = 0;
-const uint8_t RELAY_PIN = D1;
+const uint8_t RELAY_PIN = D2;
 const char* VPIN = "V7";
 StaticJsonDocument<384> doc;
 String json = "";

@@ -5,7 +5,7 @@
   Example 03 - Fan
   ============================================================
   JSON format used by this example:
-  {"Name":"valve","Active":"0","Configured Name":"valve","In Use":"0","Is Configured":"1","Remaining Duration":"0","Service Label Index":"1","Set Duration":"300","Status Fault":"0","Valve Type":"0"}
+  {"Name":"Zone 1","Active":"0","In Use":"0","Valve Type":"1","Is Configured":"1","Remaining Duration":"0","Service Label Index":"1","Set Duration":"120","Status Fault":"0"}
 
   What this example does:
     - Polls one VPin from the server
@@ -75,9 +75,6 @@ void pollVpinFromServer(String Vpin) {
 // Setup block
 // ------------------------------------------------------------
 void setup() {
-  Serial.begin(115200);
-  delay(200);
-
   for (int i = 0; i < valveCount; i++) {
     pinMode(RELAY_PIN[i], OUTPUT);
     digitalWrite(RELAY_PIN[i], HIGH);

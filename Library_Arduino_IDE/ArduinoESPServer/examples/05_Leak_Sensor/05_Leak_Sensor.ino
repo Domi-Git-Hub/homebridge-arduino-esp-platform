@@ -44,8 +44,8 @@ ESPServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN)
 // Runtime state block
 // ------------------------------------------------------------
 unsigned long lastPollMs = 0;
-const uint8_t PROBE_POWER_PIN = D1;
-const uint8_t PROBE_SENSE_PIN = D2;
+const uint8_t PROBE_POWER_PIN = D5;
+const uint8_t PROBE_SENSE_PIN = D6;
 const char* VPIN_LEAK_SENSOR = "V10";
 bool waterDetected = false;
 StaticJsonDocument<256> doc;

@@ -5,7 +5,7 @@
   Example 01 - Outlet
   ============================================================
   JSON format used by this example:
-  {"Name":"outlet","Configured Name":"outlet","On":"0","Outlet In Use":"0"}
+  {"Name":"outlet","On":"0","Outlet In Use":"0"}
 
   What this example does:
     - Polls one VPin from the server
@@ -44,7 +44,7 @@ ESPServerClient server(WIFI_SSID, WIFI_PASSWORD, SERVER_BASE_URL, PROJECT_TOKEN)
 // Runtime state block
 // ------------------------------------------------------------
 unsigned long lastPollMs = 0;
-const uint8_t RELAY_PIN = D1;
+const uint8_t RELAY_PIN = D2;
 const char* VPIN_OUTLET = "V1";
 StaticJsonDocument<256> doc;
 String json = "";
@@ -73,7 +73,7 @@ void pollVpinFromServer(String Vpin) {
 // Setup block
 // ------------------------------------------------------------
 void setup() {
-  Serial.begin(115200);
+	Serial.begin(115200);
   delay(200);
 
   pinMode(RELAY_PIN, OUTPUT);
