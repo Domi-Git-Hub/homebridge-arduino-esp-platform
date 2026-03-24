@@ -16,7 +16,7 @@
   ],
   "engines": {
     "homebridge": ">=1.8.0 || ^2.0.0",
-    "node": ">=20.0.0"
+    "node": "^20 || ^22 || ^24"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,6 @@
   "homepage": "https://github.com/Domi-Git-Hub/homebridge-arduino-esp-platform#readme",
   "files": [
     "index.js",
-    "arduino-esp-server",
-    "Library_Arduino_IDE",
     "lib",
     "config.schema.json",
     "homebridge-ui",
