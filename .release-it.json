@@ -5,15 +5,15 @@
     "tagName": "v${version}",
     "push": true,
     "requireCleanWorkingDir": true,
-    "requireUpstream": true
+    "requireUpstream": true,
+    "changelog": "git log --pretty=format:\"- %s (%h)\" $(git describe --tags --abbrev=0 2>/dev/null)..HEAD"
   },
   "npm": {
     "publish": true
   },
   "github": {
     "release": true,
-    "releaseName": "Release ${version}",
-    "releaseNotes": "echo Release ${version}"
+    "releaseName": "Release ${version}"
   },
   "hooks": {
     "before:init": [
