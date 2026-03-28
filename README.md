@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/icon.png" alt="homebridge-arduino-esp-platform icon" width="256">
+  <img src="./assets/icon.png" alt="homebridge-arduino-esp-platform icon" width="512">
 </p>
 
 ## Homebridge Arduino ESP Platform + PHP Server + Library Arduino IDE
