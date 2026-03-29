@@ -1,7 +1,7 @@
 {
   "name": "homebridge-arduino-esp-platform",
   "displayName": "Arduino ESP Platform",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Homebridge dynamic platform for Arduino and ESP projects using a JSON VPin server.",
   "license": "MIT",
   "main": "index.js",
@@ -14,7 +14,7 @@
     "json",
     "irrigation"
   ],
-	"funding": [
+  "funding": [
     {
       "type": "paypal",
       "url": "https://paypal.me/DominicClavet"
