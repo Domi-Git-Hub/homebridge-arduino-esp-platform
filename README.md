@@ -10,7 +10,7 @@
   [![verified-by-homebridge](https://img.shields.io/badge/_-verified-blueviolet?color=%23491F59&style=flat&logoColor=%23FFFFFF&logo=homebridge)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
   [![GitHub release](https://img.shields.io/github/v/release/Domi-Git-Hub/homebridge-arduino-esp-platform)](https://github.com/Domi-Git-Hub/homebridge-arduino-esp-platform/releases)
   [![npm version](https://img.shields.io/npm/v/homebridge-arduino-esp-platform)](https://www.npmjs.com/package/homebridge-arduino-esp-platform)
-  [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-339933)](https://www.npmjs.com/package/homebridge-arduino-esp-platform)
+  [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-339933)](https://nodejs.org/en/download)
   [![Homebridge](https://img.shields.io/badge/homebridge-%3E%3D1.8.0-blue)](https://homebridge.io)
   [![license](https://img.shields.io/npm/l/homebridge-arduino-esp-platform)](LICENSE)
 
