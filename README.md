@@ -3,6 +3,8 @@
   <img src="./assets/icon.png" alt="homebridge-arduino-esp-platform icon" width="512">
 
   <br />
+	
+	--
 
   [![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-blueviolet?color=%23491F59&style=for-the-badge&logoColor=%23FFFFFF&logo=homebridge)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
   [![GitHub release](https://img.shields.io/github/v/release/Domi-Git-Hub/homebridge-arduino-esp-platform)](https://github.com/Domi-Git-Hub/homebridge-arduino-esp-platform/releases)
@@ -12,6 +14,8 @@
   [![license](https://img.shields.io/npm/l/homebridge-arduino-esp-platform)](LICENSE)
 
 </div>
+
+---
 
 ## Homebridge Arduino ESP Platform + PHP Server + Library Arduino IDE
 
