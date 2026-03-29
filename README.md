@@ -2,7 +2,7 @@
 
   [![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-blueviolet?color=%23491F59&style=for-the-badge&logoColor=%23FFFFFF&logo=homebridge)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 	
-	<br />
+
 	
   <img src="./assets/icon.png" alt="homebridge-arduino-esp-platform icon" width="512">
 
