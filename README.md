@@ -1,5 +1,4 @@
 <div align="center">
-
   <img src="./assets/icon.png" alt="homebridge-arduino-esp-platform icon" width="512">
 
   <br />
